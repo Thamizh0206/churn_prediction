@@ -133,9 +133,11 @@ class ExplainedModel:
 
     @property
     def non_categorical_features(self):
+        # Exclude the label name (and any variations) safely
+        cols_to_drop = [self.labels.name, self.labels.name + " probability", "Churn probability", "Churn"]
         return list(
             self.data.select_dtypes(exclude=["category"]).columns.drop(
-                self.labels.name + " probability"
+                [c for c in cols_to_drop if c in self.data.columns]
             )
         )
 
