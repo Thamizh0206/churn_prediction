@@ -36,13 +36,13 @@ def jsonify(obj):
 
 # Set base directory relative to this file
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-CODE_DIR = os.path.join(BASE_DIR, "code")
+BACKEND_DIR = os.path.join(BASE_DIR, "backend")
 
 import sys
-if CODE_DIR not in sys.path:
-    sys.path.insert(0, CODE_DIR)
+if BACKEND_DIR not in sys.path:
+    sys.path.insert(0, BACKEND_DIR)
 
-from churnexplainer import ExplainedModel
+from backend.churnexplainer import ExplainedModel
 
 
 # This reduces the the output to the console window
@@ -89,10 +89,10 @@ def send_file(path):
     return send_from_directory("flask", path)
 
 
-# Grabs a sample explained dataset for 10 randomly selected customers.
 @flask_app.route("/sample_table")
 def sample_table():
-    sample_ids = random.sample(range(1, len(em.data)), 10)
+    # Reduced sample size to 3 for Vercel serverless timeout limit (10s)
+    sample_ids = random.sample(range(1, len(em.data)), 3)
     sample_table = []
     for ids in sample_ids:
         sample_table.append(explainid(str(ids)))
