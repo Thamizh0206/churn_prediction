@@ -52,8 +52,21 @@ log = logging.getLogger("werkzeug")
 log.setLevel(logging.ERROR)
 
 
-# Load the explained model
-em = ExplainedModel.load(model_name="telco_linear")
+# Load the explained model with robust diagnostics
+try:
+    print(f"DEBUG: Attempting to load model from {BASE_DIR}")
+    em = ExplainedModel.load(model_name="telco_linear")
+    if em is None:
+        raise ValueError("ExplainedModel.load returned None")
+    print("DEBUG: Model loaded successfully")
+except Exception as e:
+    print(f"CRITICAL ERROR: Failed to load model: {str(e)}")
+    # Create a dummy object so the app doesn't crash on boot
+    em = None
+
+@flask_app.route("/test")
+def test():
+    return f"Base Dir: {BASE_DIR}, API Dir: {API_DIR}, Model Loaded: {em is not None}"
 
 # Creates an explained version of a partiuclar data point. This is almost exactly the same as the data used in the model serving code.
 def explainid(N):
