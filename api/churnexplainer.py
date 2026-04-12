@@ -47,7 +47,7 @@ and methods for users (who usually have dataframes):
  - explain_df, returns predictions and explanation for example dataframe
 """
 
-# Use absolute pathing relative to this file to ensure it works in any environment (like Vercel)
+# In Vercel, if this file is in 'api/', the root is one level up
 DATA_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 

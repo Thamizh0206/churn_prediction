@@ -34,15 +34,17 @@ def jsonify(obj):
     """Return a JSON Flask Response, handling numpy scalar types."""
     return Response(json.dumps(obj, cls=_NumpyEncoder), mimetype="application/json")
 
-# Set base directory relative to this file
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-BACKEND_DIR = os.path.join(BASE_DIR, "backend")
-
 import sys
-if BACKEND_DIR not in sys.path:
-    sys.path.insert(0, BACKEND_DIR)
 
-from backend.churnexplainer import ExplainedModel
+# Set base directory relative to this file
+API_DIR = os.path.dirname(os.path.abspath(__file__))
+BASE_DIR = os.path.dirname(API_DIR)
+
+# Add both to path for local and vercel
+sys.path.insert(0, API_DIR)
+sys.path.insert(0, BASE_DIR)
+
+from churnexplainer import ExplainedModel
 
 
 # This reduces the the output to the console window

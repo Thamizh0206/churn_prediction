@@ -1,16 +1,16 @@
 import sys
 import os
 
-# Get project root
+# Project root is the parent directory of this file
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-# Get backend directory
-BACKEND_DIR = os.path.join(ROOT, "backend")
+# API directory is where index.py and app.py live
+API_DIR = os.path.dirname(os.path.abspath(__file__))
 
-# Add both to sys.path
+# Add both to path
 if ROOT not in sys.path:
     sys.path.insert(0, ROOT)
-if BACKEND_DIR not in sys.path:
-    sys.path.insert(0, BACKEND_DIR)
+if API_DIR not in sys.path:
+    sys.path.insert(0, API_DIR)
 
-# Import the Flask app from 'app.py' inside the 'backend' folder
-from backend.app import flask_app as app
+# Import the Flask app from 'app.py' inside this same 'api' directory
+from app import flask_app as app
