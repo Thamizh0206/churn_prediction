@@ -73,11 +73,15 @@ except Exception as e:
 def test():
     return f"Base Dir: {BASE_DIR}, API Dir: {API_DIR}, Model Loaded: {em is not None}"
 
-# Creates an explained version of a partiuclar data point. This is almost exactly the same as the data used in the model serving code.
+# Creates an explained version of a partiuclar data point.
 def explainid(N):
     customer_data = dataid(N)[0]
-    customer_data.pop("id")
-    customer_data.pop("Churn probability")
+    # Use safe pops to avoid KeyErrors if these columns don't exist
+    customer_data.pop("id", None)
+    customer_data.pop("customerID", None)
+    customer_data.pop("Churn probability", None)
+    customer_data.pop(em.label_name, None)
+    
     data = em.cast_dct(customer_data)
     probability, explanation = em.explain_dct(data)
     return {
