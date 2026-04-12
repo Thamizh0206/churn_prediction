@@ -166,6 +166,23 @@ def model_prediction():
 
 print("App running at http://127.0.0.1:5000/")
 
+import traceback
+
+@flask_app.errorhandler(Exception)
+def handle_exception(e):
+    # Pass through HTTP errors
+    if hasattr(e, "code"):
+        return jsonify({"error": str(e), "code": e.code}), e.code
+    # Handle non-HTTP exceptions only
+    return Response(
+        json.dumps({
+            "error": str(e),
+            "traceback": traceback.format_exc()
+        }),
+        status=500,
+        mimetype="application/json"
+    )
+
 # Launch Flask server locally
 if __name__ == "__main__":
     flask_app.run(host="127.0.0.1", port=5000, debug=False)
