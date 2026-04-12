@@ -113,6 +113,20 @@ def stats():
     return jsonify(em.stats)
 
 
+@flask_app.route("/debug")
+def debug_info():
+    import sys
+    import os
+    info = {
+        "cwd": os.getcwd(),
+        "sys_path": sys.path,
+        "files_in_root": os.listdir("."),
+        "files_in_backend": os.listdir("backend") if os.path.exists("backend") else "backend missing",
+        "env": {k: v for k, v in os.environ.items() if "PORT" in k or "VERCEL" in k or "PYTHON" in k}
+    }
+    return jsonify(info)
+
+
 @flask_app.route("/model", methods=["POST", "GET"])
 def model_prediction():
     req_data = request.get_json() or {}
