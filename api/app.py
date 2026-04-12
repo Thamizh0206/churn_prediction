@@ -63,7 +63,10 @@ try:
     em = ExplainedModel.load(model_name="telco_linear")
     if em is None:
         raise ValueError("ExplainedModel.load returned None")
-    print("DEBUG: Model loaded successfully")
+    
+    # NEW: Initialize the explainer at runtime to avoid serialization issues
+    em.initialize_explainer()
+    print("DEBUG: Model and Explainer loaded successfully")
 except Exception as e:
     print(f"CRITICAL ERROR: Failed to load model: {str(e)}")
     # Create a dummy object so the app doesn't crash on boot

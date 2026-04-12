@@ -10,6 +10,7 @@
 import datetime, dill, os
 import numpy as np
 import pandas as pd
+from lime.lime_tabular import LimeTabularExplainer
 
 
 from sklearn.pipeline import TransformerMixin
@@ -75,10 +76,27 @@ class ExplainedModel:
         result = ExplainedModel()
         try:
             with open(model_path, "rb") as f:
-                result.__dict__.update(dill.load(f))
+                # Load the dictionary but skip 'explainer' if it exists in the pickle
+                data_dict = dill.load(f)
+                if "explainer" in data_dict:
+                    del data_dict["explainer"]
+                result.__dict__.update(data_dict)
             return result
         except OSError as err: 
             print(f"Model path does not exist, returned error: {err}")
+
+    def initialize_explainer(self):
+        """Initializes the LIME explainer at runtime to avoid serialization issues."""
+        print("Initializing LIME explainer at runtime...")
+        self.explainer = LimeTabularExplainer(
+            self.categoricalencoder.transform(self.data),
+            feature_names=list(self.data.columns),
+            class_names=["No Churn", "Churn"],
+            categorical_features=list(self.categoricalencoder.cat_columns_ix_.values()),
+            categorical_names=self.categoricalencoder.classes_,
+            discretize_continuous=True,
+        )
+        print("LIME explainer initialized.")
 
     def save(self, model_name):
         model_dir = os.path.join(DATA_DIR, "models", model_name)
@@ -90,7 +108,7 @@ class ExplainedModel:
             "labels": self.labels,
             "categoricalencoder": self.categoricalencoder,
             "pipeline": self.pipeline,
-            "explainer": self.explainer,
+            # We explicitly do NOT save the explainer here to avoid pathing errors on Vercel
         }
         with open(model_path, "wb") as f:
             dill.dump(dilldict, f)

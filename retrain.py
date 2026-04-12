@@ -44,25 +44,15 @@ X_train = ce.transform(train_df)
 model = LogisticRegression(max_iter=1000)
 model.fit(X_train, train_labels)
 
-# 5. Build Explanation
-print("Initializing LIME explainer (this might take a moment)...")
+# 5. Build Explanation (NEW: This now just tests that initialization works)
+print("Initializing LIME explainer to verify...")
 em = ExplainedModel(
     data=train_df,
     labels=train_labels,
     categoricalencoder=ce,
     pipeline=model
 )
-
-# Initialize the explainer internally
-from lime.lime_tabular import LimeTabularExplainer
-em.explainer = LimeTabularExplainer(
-    ce.transform(train_df),
-    feature_names=list(train_df.columns),
-    class_names=["No Churn", "Churn"],
-    categorical_features=list(ce.cat_columns_ix_.values()),
-    categorical_names=ce.classes_,
-    discretize_continuous=True,
-)
+em.initialize_explainer()
 
 # 6. Save
 print("Saving fresh model to models/telco_linear/telco_linear.pkl...")
