@@ -36,8 +36,13 @@ def jsonify(obj):
 
 # Set base directory relative to this file
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+CODE_DIR = os.path.join(BASE_DIR, "code")
 
-from code.churnexplainer import ExplainedModel
+import sys
+if CODE_DIR not in sys.path:
+    sys.path.insert(0, CODE_DIR)
+
+from churnexplainer import ExplainedModel
 
 
 # This reduces the the output to the console window
