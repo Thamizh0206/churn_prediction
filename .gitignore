@@ -1,0 +1,31 @@
+# Virtual environment
+venv/
+
+# Python egg-info / build artifacts
+*.egg-info/
+churn_prediction.egg-info/
+src/churn_prediction.egg-info/
+dist/
+build/
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+
+# Jupyter checkpoints
+.ipynb_checkpoints/
+
+# Logs
+logs/
+*.log
+
+# SQLite databases (pre-seeded model_metrics.db is committed intentionally)
+# model_metrics.db
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
