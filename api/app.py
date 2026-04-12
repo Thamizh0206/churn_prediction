@@ -34,11 +34,14 @@ def jsonify(obj):
     """Return a JSON Flask Response, handling numpy scalar types."""
     return Response(json.dumps(obj, cls=_NumpyEncoder), mimetype="application/json")
 
-import sys
 
+import sys
 # Set base directory relative to this file
 API_DIR = os.path.dirname(os.path.abspath(__file__))
 BASE_DIR = os.path.dirname(API_DIR)
+
+# Flask configuration with absolute static path
+flask_app = Flask(__name__, static_folder=os.path.join(BASE_DIR, "flask"))
 
 # Add both to path for local and vercel
 sys.path.insert(0, API_DIR)
@@ -90,8 +93,7 @@ def dataid(N):
     return customer_df.to_dict(orient="records")
 
 
-# Flask configuration with absolute static path
-flask_app = Flask(__name__, static_folder=os.path.join(BASE_DIR, "flask"))
+# Flask configuration was moved to top to prevent NameErrors
 
 
 @flask_app.route("/")
