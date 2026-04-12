@@ -14,8 +14,10 @@ import os
 import json
 import numpy as np
 from collections import ChainMap
+# Set Matplotlib to use a headless backend for server execution
+os.environ["MPLBACKEND"] = "Agg"
+import matplotlib
 import logging
-import subprocess
 
 
 class _NumpyEncoder(json.JSONEncoder):
