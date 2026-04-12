@@ -112,7 +112,8 @@ class ExplainedModel:
         return self.explain_df(pd.DataFrame([dct]))
 
     def cast_dct(self, dct):
-        dct = {k: self.dtypes[k].type(v) for k, v in dct.items()}
+        # Only cast keys that exist in our feature definitions
+        dct = {k: self.dtypes[k].type(v) for k, v in dct.items() if k in self.dtypes}
         dct = {
             k: (v if type(v) != np.dtype("int64") else int(v)) for k, v in dct.items()
         }

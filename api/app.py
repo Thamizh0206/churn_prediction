@@ -78,6 +78,7 @@ def explainid(N):
     customer_data = dataid(N)[0]
     # Use safe pops to avoid KeyErrors if these columns don't exist
     customer_data.pop("id", None)
+    customer_data.pop("index", None)
     customer_data.pop("customerID", None)
     customer_data.pop("Churn probability", None)
     customer_data.pop(em.label_name, None)
